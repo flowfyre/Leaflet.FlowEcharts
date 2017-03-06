@@ -4,7 +4,7 @@ A plugin for leaflet to load echarts map and make BigData Visualization.
 改写了leaflet-echarts：参考https://github.com/wandergis/leaflet-echarts
 
 # 主要变更
-1. 添加对1.新版本leaflet的支持，并保留对0.7.7版本的支持
+1. 添加对1.x新版本leaflet的支持，并保留对0.7.7版本的支持
 2. 解除echarts事件绑定，在事件联动这个地方以及echarts的容器与地图容器在拖动和缩放中的适应上，采取重绘的方式，即地图发生拖动和缩放就对echarts进行重绘
 3. 原leaflet-echarts采用数组存储经纬度geoCoord，容易导致内存溢出，部分节点无法正确显示在界面上，因此本版本删除了这部分代码，仅支持在数据中包含经纬度信息，不支持通过name获取经纬度信息
 4. 修复对多个echarts图层的鼠标悬浮/点击交互支持
