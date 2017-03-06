@@ -31,11 +31,12 @@ A plugin for leaflet to load echarts map and make BigData Visualization.
 
 # 截图示例
 
-![](https://raw.githubusercontent.com/wandergis/leaflet-echarts/master/examples/demo.gif)
+![](https://github.com/flowfyre/Leaflet.FlowEcharts/blob/master/examples/demo.gif)
 
-![](https://raw.githubusercontent.com/wandergis/leaflet-echarts/master/examples/demo2.gif)
+![](https://github.com/flowfyre/Leaflet.FlowEcharts/blob/master/examples/demo2.png)
 
 # 参考
 
 >[https://github.com/ecomfe/echarts](https://github.com/ecomfe/echarts)
+
 >[https://github.com/wandergis/leaflet-echarts](https://github.com/wandergis/leaflet-echarts)
