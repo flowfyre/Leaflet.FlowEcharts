@@ -8,6 +8,7 @@
     // define a Common JS module that relies on 'leaflet'
     } else if (typeof exports === 'object') {
         module.exports = factory(require('leaflet'));
+        module.exports = factory(require('jquery'));
     }
 
     // attach your plugin to the global 'L' variable
@@ -71,7 +72,6 @@ L.FlowEcharts = (L.version < "1.0" ? L.Class : L.Layer).extend({
     _redraw: function() {
         this._resetCanvasPosition();
         this._echartsContainer.innerHTML='';
-        console.log(this._echartsContainer);
         this.initECharts();
         this.setOption(this._echartsOption);
         return this;
@@ -133,35 +133,57 @@ L.FlowEcharts = (L.version < "1.0" ? L.Class : L.Layer).extend({
        * @param notMerge
        */
       setOption : function(option, notMerge) {
-        var tmpoption=option;
+        var tmpoption = $.extend(true, {}, option);
         var series = tmpoption.series || {};
 
-       
+       if(echarts.version<'3.0'){
 
-        // 添加x、y
-        for (var i = 0, item; item = series[i++];) {
-          var markPoint = item.markPoint || {};
-          var markLine = item.markLine || {};
+          // 添加x、y
+          for (var i = 0, item; item = series[i++];) {
+            var markPoint = item.markPoint || {};
+            var markLine = item.markLine || {};
 
-          var data = markPoint.data;
-          if (data && data.length) {
-            for (var k = 0, len = data.length; k < len; k++) {
-              
-              this._AddPos(data[k]);
+            var data = markPoint.data;
+            if (data && data.length) {
+              for (var k = 0, len = data.length; k < len; k++) {
+                
+                this._AddPos(data[k]);
+              }
+            }
+
+            data = markLine.data;
+            if (data && data.length) {
+              for (var k = 0, len = data.length; k < len; k++) {
+                
+                this._AddPos(data[k][0]);
+                this._AddPos(data[k][1]);
+              }
             }
           }
-
-          data = markLine.data;
-          if (data && data.length) {
-            for (var k = 0, len = data.length; k < len; k++) {
-              
-              this._AddPos(data[k][0]);
-              this._AddPos(data[k][1]);
+        }else{
+          for(var i=0,item;item=series[i++];){
+            var data=item.data;
+            if(item.type=='lines'){
+              if(data&&data.length){
+                for(var k=0,len=data.length;k<len;k++){
+                  this._AddPos(data[k][0]);
+                  this._AddPos(data[k][1]);
+                }
+              }
+            }else{
+              if(data&&data.length){
+                for(var k=0,len=data.length;k<len;k++){
+                  var point = new L.latLng(data[k].value[1], data[k].value[0]);
+                  var pos = this._map.latLngToContainerPoint(point);
+                  data[k].value[0]=pos.x;
+                  data[k].value[1]=pos.y;
+                }
+              }
             }
           }
         }
-
-        this._ec.setOption(option, notMerge);
+       
+        this._ec.setOption(tmpoption, notMerge);
       },
 
       /**
@@ -171,11 +193,16 @@ L.FlowEcharts = (L.version < "1.0" ? L.Class : L.Layer).extend({
        * @param {Object} geoCoord
        */
       _AddPos : function(obj) {
-
-        var coord = obj.geoCoord;
-        var pos = this.geoCoord2Pixel(coord);
-        obj.x = pos[0]; //- this._mapOffset[0];
-        obj.y = pos[1]; //- this._mapOffset[1];
+        if(echarts.version<'3.0'){
+          var coord = (echarts.version<'3.0')?obj.geoCoord:obj.coord;
+          var pos = this.geoCoord2Pixel(coord);
+          obj.x = pos[0]; //- this._mapOffset[0];
+          obj.y = pos[1]; //- this._mapOffset[1];
+        }else{
+          var coord = obj.coord;
+          var pos = this.geoCoord2Pixel(coord);
+          obj.coord = pos; 
+        }
       },
 
 
@@ -185,12 +212,19 @@ L.FlowEcharts = (L.version < "1.0" ? L.Class : L.Layer).extend({
        * @private
        */
       _unbindEvent : function() {
-       
-        this._ec.getZrender().un('dragstart', function(){});
-        this._ec.getZrender().un('dragend', function(){});
-        this._ec.getZrender().un('mouseup', function(){});
-        this._ec.getZrender().un('mousedown', function(){});
-        this._ec.getZrender().un('mousewheel', function(){});
+        if(echarts.version<'3.0'){
+          this._ec.getZrender().un('dragstart', function(){});
+          this._ec.getZrender().un('dragend', function(){});
+          this._ec.getZrender().un('mouseup', function(){});
+          this._ec.getZrender().un('mousedown', function(){});
+          this._ec.getZrender().un('mousewheel', function(){});
+        }else{
+          this._ec.getZr().off('dragstart', function(){});
+          this._ec.getZr().off('dragend', function(){});
+          this._ec.getZr().off('mouseup', function(){});
+          this._ec.getZr().off('mousedown', function(){});
+          this._ec.getZr().off('mousewheel', function(){});
+        }
       }
 
       
