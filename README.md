@@ -8,7 +8,7 @@ A plugin for leaflet to load echarts map and make BigData Visualization.
 2. 解除echarts事件绑定，在事件联动这个地方以及echarts的容器与地图容器在拖动和缩放中的适应上，采取重绘的方式，即地图发生拖动和缩放就对echarts进行重绘
 3. 原leaflet-echarts采用数组存储经纬度geoCoord，容易导致内存溢出，部分节点无法正确显示在界面上，因此本版本删除了这部分代码，仅支持在数据中包含经纬度信息，不支持通过name获取经纬度信息
 4. 修复对多个echarts图层的鼠标悬浮/点击交互支持
-
+5. 支持Echarts 2.2.7和3.x版本 （其中旧版本flowEcharts2.js仅支持echarts2.2.7）
 
 
 
@@ -34,6 +34,9 @@ A plugin for leaflet to load echarts map and make BigData Visualization.
 ![](https://github.com/flowfyre/Leaflet.FlowEcharts/blob/master/examples/demo.gif)
 
 ![](https://github.com/flowfyre/Leaflet.FlowEcharts/blob/master/examples/demo2.png)
+
+![](https://github.com/flowfyre/Leaflet.FlowEcharts/blob/master/examples/echarts3.png)
+
 
 # 参考
 
