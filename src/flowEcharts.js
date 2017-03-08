@@ -120,11 +120,17 @@ window.flowEchartsIndex = 0;
      */
     initECharts: function () {
       this._ec = echarts.init(this._echartsContainer);
+      if(echarts.version>='3.0'){
+        var n = this;
+        n._ec.Geo.prototype.dataToPoint = function (geoCoord) {
+          var point = new L.latLng(geoCoord[1], geoCoord[0]);
+          var pos = n._map.latLngToContainerPoint(point);
+          return [pos.x, pos.y];
+        };
+      }
       this._unbindEvent();
 
     },
-
-
 
     /**
      * 对echarts的setOption加一次处理
@@ -176,30 +182,10 @@ window.flowEchartsIndex = 0;
               }
             }
           }
-        } else {
-          for (var i = 0, item; item = series[i++];) {
-            var data = item.data;
-            if (item.type == 'lines') {
-              if (data && data.length) {
-                for (var k = 0, len = data.length; k < len; k++) {
-                  this._AddPos(data[k][0]);
-                  this._AddPos(data[k][1]);
-                }
-              }
-            } else {
-              if (data && data.length) {
-                for (var k = 0, len = data.length; k < len; k++) {
-                  var point = new L.latLng(data[k].value[1], data[k].value[0]);
-                  var pos = this._map.latLngToContainerPoint(point);
-                  data[k].value[0] = pos.x;
-                  data[k].value[1] = pos.y;
-                }
-              }
-            }
-          }
-        }
+        } 
 
         this._ec.setOption(tmpoption, notMerge);
+
       }
     },
 
