@@ -135,70 +135,72 @@ window.flowEchartsIndex = 0;
      * @param notMerge
      */
     setOption: function (option, notMerge) {
-      var tmpoption = $.extend(true, {}, option);
-      var series = tmpoption.series || {};
-      var _geoCoord = {}, geoflag = false;
-      if (echarts.version < '3.0') {
+      if (option.series) {
+        var tmpoption = $.extend(true, {}, option);
+        var series = tmpoption.series || {};
+        var _geoCoord = {}, geoflag = false;
+        if (echarts.version < '3.0') {
 
-        // 记录所有的geoCoord
-        for (var i = 0, item; item = series[i++];) {
-          var geoCoord = item.geoCoord;
-          if (geoCoord) {
-            geoflag = true;
-            _geoCoord = geoCoord;
-          }
-        }
-        // 添加x、y
-        for (var i = 0, item; item = series[i++];) {
-          var markPoint = item.markPoint || {};
-          var markLine = item.markLine || {};
-
-          var data = markPoint.data;
-          if (data && data.length) {
-            for (var k = 0, len = data.length; k < len; k++) {
-              if (geoflag) {
-                data[k].geoCoord = _geoCoord[data[k].name];
-              }
-              this._AddPos(data[k]);
+          // 记录所有的geoCoord
+          for (var i = 0, item; item = series[i++];) {
+            var geoCoord = item.geoCoord;
+            if (geoCoord) {
+              geoflag = true;
+              _geoCoord = geoCoord;
             }
           }
+          // 添加x、y
+          for (var i = 0, item; item = series[i++];) {
+            var markPoint = item.markPoint || {};
+            var markLine = item.markLine || {};
 
-          data = markLine.data;
-          if (data && data.length) {
-            for (var k = 0, len = data.length; k < len; k++) {
-              if (geoflag) {
-                data[k][0].geoCoord = _geoCoord[data[k][0].name];
-                data[k][1].geoCoord = _geoCoord[data[k][1].name];
-              }
-              this._AddPos(data[k][0]);
-              this._AddPos(data[k][1]);
-            }
-          }
-        }
-      } else {
-        for (var i = 0, item; item = series[i++];) {
-          var data = item.data;
-          if (item.type == 'lines') {
+            var data = markPoint.data;
             if (data && data.length) {
               for (var k = 0, len = data.length; k < len; k++) {
+                if (geoflag) {
+                  data[k].geoCoord = _geoCoord[data[k].name];
+                }
+                this._AddPos(data[k]);
+              }
+            }
+
+            data = markLine.data;
+            if (data && data.length) {
+              for (var k = 0, len = data.length; k < len; k++) {
+                if (geoflag) {
+                  data[k][0].geoCoord = _geoCoord[data[k][0].name];
+                  data[k][1].geoCoord = _geoCoord[data[k][1].name];
+                }
                 this._AddPos(data[k][0]);
                 this._AddPos(data[k][1]);
               }
             }
-          } else {
-            if (data && data.length) {
-              for (var k = 0, len = data.length; k < len; k++) {
-                var point = new L.latLng(data[k].value[1], data[k].value[0]);
-                var pos = this._map.latLngToContainerPoint(point);
-                data[k].value[0] = pos.x;
-                data[k].value[1] = pos.y;
+          }
+        } else {
+          for (var i = 0, item; item = series[i++];) {
+            var data = item.data;
+            if (item.type == 'lines') {
+              if (data && data.length) {
+                for (var k = 0, len = data.length; k < len; k++) {
+                  this._AddPos(data[k][0]);
+                  this._AddPos(data[k][1]);
+                }
+              }
+            } else {
+              if (data && data.length) {
+                for (var k = 0, len = data.length; k < len; k++) {
+                  var point = new L.latLng(data[k].value[1], data[k].value[0]);
+                  var pos = this._map.latLngToContainerPoint(point);
+                  data[k].value[0] = pos.x;
+                  data[k].value[1] = pos.y;
+                }
               }
             }
           }
         }
-      }
 
-      this._ec.setOption(tmpoption, notMerge);
+        this._ec.setOption(tmpoption, notMerge);
+      }
     },
 
     /**
@@ -241,10 +243,6 @@ window.flowEchartsIndex = 0;
         this._ec.getZr().off('mousewheel', function () { });
       }
     }
-
-
-
-
   });
 
 

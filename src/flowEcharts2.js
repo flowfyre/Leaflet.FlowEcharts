@@ -133,47 +133,48 @@ window.flowEchartsIndex = 0;
      * @param notMerge
      */
     setOption: function (option, notMerge) {
-
-      var series = option.series || {};
-      var _geoCoord = {}, geoflag = false;
-      // 记录所有的geoCoord
-      for (var i = 0, item; item = series[i++];) {
-        var geoCoord = item.geoCoord;
-        if (geoCoord) {
-          geoflag = true;
-          _geoCoord = geoCoord;
-        }
-      }
-
-      // 添加x、y
-      for (var i = 0, item; item = series[i++];) {
-        var markPoint = item.markPoint || {};
-        var markLine = item.markLine || {};
-
-        var data = markPoint.data;
-        if (data && data.length) {
-          for (var k = 0, len = data.length; k < len; k++) {
-            if (geoflag) {
-              data[k].geoCoord = _geoCoord[data[k].name];
-            }
-            this._AddPos(data[k]);
+      if (option.series) {
+        var series = option.series || {};
+        var _geoCoord = {}, geoflag = false;
+        // 记录所有的geoCoord
+        for (var i = 0, item; item = series[i++];) {
+          var geoCoord = item.geoCoord;
+          if (geoCoord) {
+            geoflag = true;
+            _geoCoord = geoCoord;
           }
         }
 
-        data = markLine.data;
-        if (data && data.length) {
-          for (var k = 0, len = data.length; k < len; k++) {
-            if (geoflag) {
-              data[k][0].geoCoord = _geoCoord[data[k][0].name];
-              data[k][1].geoCoord = _geoCoord[data[k][1].name];
+        // 添加x、y
+        for (var i = 0, item; item = series[i++];) {
+          var markPoint = item.markPoint || {};
+          var markLine = item.markLine || {};
+
+          var data = markPoint.data;
+          if (data && data.length) {
+            for (var k = 0, len = data.length; k < len; k++) {
+              if (geoflag) {
+                data[k].geoCoord = _geoCoord[data[k].name];
+              }
+              this._AddPos(data[k]);
             }
-            this._AddPos(data[k][0]);
-            this._AddPos(data[k][1]);
+          }
+
+          data = markLine.data;
+          if (data && data.length) {
+            for (var k = 0, len = data.length; k < len; k++) {
+              if (geoflag) {
+                data[k][0].geoCoord = _geoCoord[data[k][0].name];
+                data[k][1].geoCoord = _geoCoord[data[k][1].name];
+              }
+              this._AddPos(data[k][0]);
+              this._AddPos(data[k][1]);
+            }
           }
         }
-      }
 
-      this._ec.setOption(option, notMerge);
+        this._ec.setOption(option, notMerge);
+      }
     },
 
     /**
