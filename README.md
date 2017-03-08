@@ -9,8 +9,8 @@ A leaflet plugin for Baidu Echarts
 3. 修复问题：原leaflet-echarts采用数组存储经纬度geoCoord，容易导致内存溢出，部分节点无法正确显示在界面上
 4. 修复对多个echarts图层的鼠标悬浮/点击交互支持
 5. 支持Echarts 2.2.7和3.x版本，其中 
-> flowEcharts2.js仅支持echarts2.2.7(官方版本)
-> flowEcharts.js同时支持两个版本，但必须引用lib下的echarts3.js（仅修改了一行代码，对其他功能无影响）
+1) flowEcharts2.js仅支持echarts2.2.7(官方版本)
+2) flowEcharts.js同时支持两个版本，但必须引用lib下的echarts3.js（仅修改了一行代码，对其他功能无影响）
 
 
 
