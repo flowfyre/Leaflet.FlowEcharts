@@ -142,8 +142,8 @@ window.flowEchartsIndex = 0;
      */
     setOption: function (option, notMerge) {
       if (option.series) {
-        var tmpoption = $.extend(true, {}, option);
-        var series = tmpoption.series || {};
+       
+        var series = option.series || {};
         var _geoCoord = {}, geoflag = false;
         if (echarts.version < '3.0') {
 
@@ -184,7 +184,7 @@ window.flowEchartsIndex = 0;
           }
         } 
 
-        this._ec.setOption(tmpoption, notMerge);
+        this._ec.setOption(option, notMerge);
 
       }
     },
